@@ -1,0 +1,25 @@
+.searchCard {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  gap: 20px;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+
+  &:hover {
+    background-color: #f1f1f1;
+  }
+}
+
+.searchCard__img {
+  object-fit: cover;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.searchCard__name {
+  font-size: 16px;
+  font-weight: bold;
+}

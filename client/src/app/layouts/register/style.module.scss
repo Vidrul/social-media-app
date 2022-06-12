@@ -1,0 +1,24 @@
+.login {
+  width: 100vw;
+  height: 100vh;
+  background-color: #f0f2f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.form__type {
+  color: #8fa0ae;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-normal);
+  padding: 10px;
+
+  button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: var(--fs-sm);
+    color: #404142;
+  }
+}
