@@ -2,6 +2,8 @@ import { DataSource } from "typeorm";
 import { User } from "./entities/User";
 import { Token } from "./entities/Token";
 import { Post } from "./entities/Post";
+import { Conversation } from "./entities/Conversation";
+import { Message } from "./entities/Message";
 
 export const AppDataSource = new DataSource({
   type: "postgres",
@@ -12,5 +14,5 @@ export const AppDataSource = new DataSource({
   database: "mediaApp",
   synchronize: true,
   logging: true,
-  entities: [User, Token, Post],
+  entities: [User, Token, Post, Conversation, Message],
 });

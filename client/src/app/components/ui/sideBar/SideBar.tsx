@@ -14,6 +14,7 @@ import {
 import { Users } from "../../../dummyData";
 import CloseFriend from "../closeFriend/CloseFriend";
 import List from "../../common/list/List";
+import { Link } from "react-router-dom";
 
 const SideBar: FC = () => {
   return (
@@ -24,10 +25,10 @@ const SideBar: FC = () => {
             <RssFeed className={style.sidebarIcon} />
             <span className={style.sidebarListItemText}>Feed</span>
           </li>
-          <li className={style.sidebarListItem}>
+          <Link to={"/messanger"} className={style.sidebarListItem}>
             <Chat className={style.sidebarIcon} />
             <span className={style.sidebarListItemText}>Chats</span>
-          </li>
+          </Link>
           <li className={style.sidebarListItem}>
             <PlayCircleFilledOutlined className={style.sidebarIcon} />
             <span className={style.sidebarListItemText}>Videos</span>

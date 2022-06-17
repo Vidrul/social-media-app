@@ -1,4 +1,4 @@
-import { IPayloadSignUp, IUserData } from "../types/types";
+import { IUserData } from "../types/types";
 import httpService from "./http.service";
 import localStorageService from "./localStorage.service";
 

@@ -42,7 +42,7 @@ const TopBar: FC = () => {
     <nav className={style.topbarContainer}>
       <div className={style.topbarLeft}>
         <Link to={"/"} className={style.logo}>
-          Lamasocial
+          VidRULsocial
         </Link>
       </div>
       <div className={style.topbarCenter}>

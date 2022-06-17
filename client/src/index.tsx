@@ -7,6 +7,7 @@ import { StrictMode } from "react";
 import { BrowserRouter } from "react-router-dom";
 import AppLoader from "./app/components/ui/hoc/AppLoader";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { ReactQueryDevtools } from "react-query/devtools";
 
 const store = setUpStore();
 export const queryClient = new QueryClient();
@@ -19,6 +20,7 @@ ReactDOM.render(
           <AppLoader>
             <App />
           </AppLoader>
+          <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
       </Provider>
     </BrowserRouter>
