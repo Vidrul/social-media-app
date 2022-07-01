@@ -6,14 +6,14 @@ import { useMutation, useQuery } from "react-query";
 import chatService from "../../service/chat.service";
 import Message from "../../components/ui/message/Message";
 import { io } from "socket.io-client";
-import { useAppSelector } from "../../hooks/useStore";
+import { useAppDispatch, useAppSelector } from "../../hooks/useStore";
+import { setConversation } from "../../store/reducers/сonversationSlice";
 
 const Messanger: FC = () => {
+  const dispatch = useAppDispatch();
+  const messageRef = useRef<HTMLDivElement | null>(null);
   const { auth } = useAppSelector((data) => data.authUser);
-  const [currentChat, setCurrentChat] = useState<{
-    id: string;
-    members: string[];
-  } | null>(null);
+  const { currentConversation } = useAppSelector((data) => data.currentChat);
   const [messageText, setMessageText] = useState<string | null>(null);
   const [friendsQuery, setFriendsQuery] = useState<string | null>(null);
   const [messages, setMessages] = useState<
@@ -25,12 +25,6 @@ const Messanger: FC = () => {
     }[]
   >();
 
-  const [arrivalMessage, setArrivalMessage] = useState<{
-    sender: number;
-    text: string;
-    create_date: string;
-  }>();
-
   const socket = useRef<any>();
 
   const { data: conversations } = useQuery("conversations", async () => {
@@ -38,26 +32,31 @@ const Messanger: FC = () => {
     return data.conversations;
   });
 
-  const { isLoading } = useQuery(["messages", currentChat], async () => {
-    if (currentChat) {
-      const data = await chatService.getMessages(String(currentChat.id));
-      setMessages(data.messages);
-    } else {
-      return;
+  const { isLoading } = useQuery(
+    ["messages", currentConversation],
+    async () => {
+      if (currentConversation) {
+        const data = await chatService.getMessages(
+          String(currentConversation.id)
+        );
+        setMessages(data.messages);
+      } else {
+        return;
+      }
     }
-  });
+  );
 
   const { status: createNewMessageStatus, mutateAsync: createNewMessage } =
     useMutation(async () => {
       socket.current.emit("sendMessage", {
         sender: auth,
-        conversationId: currentChat?.id,
+        conversationId: currentConversation?.id,
         text: messageText,
       });
 
       await chatService.createMessage({
         text: messageText,
-        conversationId: String(currentChat?.id),
+        conversationId: String(currentConversation?.id),
       });
 
       setMessageText(null);
@@ -93,17 +92,19 @@ const Messanger: FC = () => {
 
   useEffect(() => {
     socket.current.emit("joinConversation", {
-      conversationId: currentChat?.id,
+      conversationId: currentConversation?.id,
     });
-  }, [currentChat]);
+  }, [currentConversation]);
+
+  useEffect(() => {
+    messageRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   const isValid = () => {
     if (!messageText?.trim() || createNewMessageStatus === "loading") {
       return true;
     }
   };
-
-  console.log(isValid());
 
   return (
     <>
@@ -123,7 +124,7 @@ const Messanger: FC = () => {
               <div
                 key={c.id}
                 onClick={() => {
-                  setCurrentChat(c);
+                  dispatch(setConversation(c));
                 }}
               >
                 <Conversation conversation={c.members} />
@@ -133,11 +134,11 @@ const Messanger: FC = () => {
         </div>
         <div className={style.chatBox}>
           <div className={style.chatBoxWrapper}>
-            {currentChat ? (
+            {currentConversation ? (
               <>
                 <div className={style.chatBoxTop}>
                   {messages?.map((m, i) => (
-                    <div key={i}>
+                    <div key={i} ref={messageRef}>
                       <Message message={m} />
                     </div>
                   ))}

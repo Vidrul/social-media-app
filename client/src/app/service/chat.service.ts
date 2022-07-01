@@ -1,6 +1,22 @@
 import httpService from "./http.service";
 
 const chatService = {
+  createConversations: async (receiverId: string) => {
+    try {
+      const { data } = await httpService.post("conversation/", { receiverId });
+
+      return data as {
+        code: number;
+        data: {
+          id: string;
+          members: string[];
+        };
+      };
+    } catch (error: any) {
+      throw error.response.data;
+    }
+  },
+
   getConversations: async () => {
     try {
       const { data } = await httpService.get("conversation/");

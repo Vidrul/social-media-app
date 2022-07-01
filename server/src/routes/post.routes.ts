@@ -159,19 +159,24 @@ router.get(
 
       console.log(currentUserPosts);
 
-      const friendPosts = await Promise.all(
+      const friendsPosts = await Promise.all(
         currentUser?.followings.map((friendId) => {
-          const friend = AppDataSource.getRepository(Post).findBy({
+          const friendPosts = AppDataSource.getRepository(Post).findBy({
             userId: Number(friendId),
           });
 
-          return friend;
+          return friendPosts;
         }) || []
       );
 
       return res.status(200).json({
         message: "timeline",
-        posts: currentUserPosts.concat(...friendPosts),
+        posts: currentUserPosts.concat(...friendsPosts).sort((a, b) => {
+          return (
+            new Date(b.create_date).getTime() -
+            new Date(a.create_date).getTime()
+          );
+        }),
       });
     } catch (err) {
       return res.status(500).json({
@@ -190,7 +195,14 @@ router.get("/profile/:userId", async (req: Request, res: Response) => {
       userId: Number(userId),
     });
 
-    return res.status(200).json({ code: 200, posts: allUserPosts.reverse() });
+    return res.status(200).json({
+      code: 200,
+      posts: allUserPosts.sort((a, b) => {
+        return (
+          new Date(b.create_date).getTime() - new Date(a.create_date).getTime()
+        );
+      }),
+    });
   } catch (err) {
     return res.status(500).json({
       code: 500,

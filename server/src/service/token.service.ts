@@ -16,11 +16,9 @@ class TokenService {
 
   generate(payload: { _id: number | undefined }) {
     const accessToken = jwt.sign(payload, this.accessTokenKey, {
-      expiresIn: "31d",
+      expiresIn: "1h",
     });
-
     const refreshToken = jwt.sign(payload, this.refreshTokenKey);
-
     return { accessToken, refreshToken, expiresIn: 3600 };
   }
 

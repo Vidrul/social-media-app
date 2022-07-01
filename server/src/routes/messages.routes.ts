@@ -31,8 +31,7 @@ router.get(
   async (req: Request, res: Response) => {
     try {
       const { conversationId } = req.params;
-      console.log(conversationId, "++++++++++++++++++++++++++");
-      
+
       if (conversationId) {
         const messages = await AppDataSource.manager.findBy(Message, {
           conversationId,

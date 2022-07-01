@@ -12,7 +12,7 @@ const HomePage: FC = () => {
       <div className={style.homeContainer}>
         <SideBar />
         <Feed />
-        <RightBar profile={false} />
+        <RightBar />
       </div>
     </>
   );

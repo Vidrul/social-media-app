@@ -2,22 +2,34 @@ import express, { Request, Response } from "express";
 import authMeddleware from "../middleware/auth.meddleware";
 import { AppDataSource } from "../data-source";
 import { Conversation } from "../entities/Conversation";
+import { In } from "typeorm";
 
 const router = express.Router({ mergeParams: true });
 
 router.post("/", authMeddleware, async (req: Request, res: Response) => {
-  const conversationRepo = AppDataSource.getRepository(Conversation);
   try {
     const { receiverId } = req.body;
-    const senderId = req.user?._id;
+    const senderId = String(req.user?._id);
 
-    const newCoversation = conversationRepo.create({
-      members: [senderId, receiverId],
-    });
-    conversationRepo.save(newCoversation);
+    const conversations = await AppDataSource.manager.find(Conversation);
+    const existingConversation = conversations.find(
+      (c) => c.members.includes(receiverId) && c.members.includes(senderId)
+    );
 
-    return res.status(201).json({ code: 201, data: newCoversation });
+    if (existingConversation) {
+      return res.status(201).json({ code: 201, data: existingConversation });
+    } else {
+      const newCoversation = AppDataSource.manager.create(Conversation, {
+        members: [senderId, receiverId],
+      });
+
+      await AppDataSource.manager.save(newCoversation);
+
+      return res.status(201).json({ code: 201, data: newCoversation });
+    }
   } catch (err) {
+    console.log(err);
+
     return res.status(500).json({
       code: 500,
       message: "На сервере произошла ошибка попробуйте позже.",

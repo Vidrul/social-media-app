@@ -1,4 +1,5 @@
 import axios from "axios";
+import authService from "./auth.service";
 import localStorageService from "./localStorage.service";
 
 const http = axios.create({
@@ -6,9 +7,16 @@ const http = axios.create({
 });
 
 http.interceptors.request.use(
-  (config) => {
+  async (config) => {
     const accessToken = localStorageService.getAccessToken();
     const expireDate = localStorageService.getExpireDate();
+    const refreshToken = localStorageService.getRefreshToken();
+    const isExpired = refreshToken && Number(expireDate) < Date.now();
+
+    if (isExpired) {
+      const data = await authService.tokens();
+      localStorageService.setTokens(data);
+    }
 
     if (accessToken) {
       config.headers = {

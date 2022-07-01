@@ -8,14 +8,13 @@ import EditForm from "../../components/ui/forms/editForm/EditForm";
 import style from "./style.module.scss";
 import useUser from "../../hooks/useUser";
 import { useAppSelector } from "../../hooks/useStore";
-import { $CombinedState } from "@reduxjs/toolkit";
 import { useParams } from "react-router-dom";
 
 const Profile: FC = () => {
   const { userId } = useParams();
   const { auth } = useAppSelector((data) => data.authUser);
   const [isModalOpen, setModalOpen] = useState(false);
-  const { userData, isLoading } = useUser();
+  const { userData } = useUser();
 
   const hanldeModal = () => {
     setModalOpen((prevState) => !prevState);
@@ -58,7 +57,7 @@ const Profile: FC = () => {
           </div>
           <div className={style.profileRightBottom}>
             <ProfileFeed />
-            <RightBar profile={true} />
+            <RightBar />
           </div>
         </div>
       </div>

@@ -1,17 +1,15 @@
 import { FC } from "react";
+import { useParams } from "react-router-dom";
 import HomeRightbar from "../../components/ui/homeRightbar/HomeRightbar ";
 import ProfileRightbar from "../../components/ui/profileRightbar/ProfileRightbar";
 import style from "./style.module.scss";
 
-interface RightBarProps {
-    profile: boolean;
-}
-
-const RightBar: FC<RightBarProps> = ({ profile }) => {
+const RightBar: FC = () => {
+  const { userId } = useParams();
   return (
     <div className={style.rightbar}>
       <div className={style.rightbarWrapper}>
-        {profile ? <ProfileRightbar /> : <HomeRightbar />}
+        {!userId ? <HomeRightbar /> : <ProfileRightbar />}
       </div>
     </div>
   );

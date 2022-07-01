@@ -12,8 +12,6 @@ const Feed: FC = () => {
     return posts;
   });
 
-  console.log(data);
-
   return (
     <div className={style.feed}>
       <div className={style.feedWrapper}>

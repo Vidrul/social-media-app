@@ -1,8 +1,10 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import authReducer from "./reducers/authSlice";
+import сonversationReducer from "./reducers/сonversationSlice";
 
 const rootReducer = combineReducers({
   authUser: authReducer,
+  currentChat: сonversationReducer,
 });
 
 export function setUpStore() {

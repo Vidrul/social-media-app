@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { useQuery } from "react-query";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../hooks/useStore";
 import userService from "../../../service/user.service";
 import List from "../../common/list/List";
@@ -8,8 +8,10 @@ import style from "./style.module.scss";
 import { AddCircleOutline, RemoveCircleOutline } from "@material-ui/icons";
 import { followOrUnfollowToUser } from "../../../store/actions/authUserActions";
 import useUser from "../../../hooks/useUser";
+import { createConversation } from "../../../store/actions/conversationActions";
 
 const ProfileRightbar: FC = () => {
+  const navigate = useNavigate();
   let { userId } = useParams();
   const dispatch = useAppDispatch();
   const {
@@ -29,10 +31,16 @@ const ProfileRightbar: FC = () => {
     dispatch(followOrUnfollowToUser({ userId: userId || "" }));
   };
 
+  const startChatting = () => {
+    dispatch(createConversation(userId || "")).then(() => {
+      navigate("/messanger");
+    });
+  };
+
   return (
     <>
       {auth !== userId && !authUserIsLoading && (
-        <button className={style.followBtn} onClick={handleFollow}>
+        <button className={style.btn} onClick={handleFollow}>
           {authUser.followings.includes(userId || "") ? (
             <>
               <span>Unfollow</span> <RemoveCircleOutline />
@@ -42,6 +50,11 @@ const ProfileRightbar: FC = () => {
               <span>Follow</span> <AddCircleOutline />
             </>
           )}
+        </button>
+      )}
+      {auth !== userId && (
+        <button onClick={startChatting} className={style.btn}>
+          start chatting
         </button>
       )}
       <h4 className={style.rightbarTitle}>User information</h4>

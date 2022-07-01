@@ -23,7 +23,7 @@
 .rightbarFollowings {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+  gap: 20px;
 }
 
 .rightbarFollowing {
@@ -43,7 +43,7 @@
   border-radius: 5px;
 }
 
-.followBtn {
+.btn {
   border: none;
   background-color: #1872f2;
   color: white;
